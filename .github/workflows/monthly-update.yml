@@ -2,48 +2,35 @@ name: Monthly Grant Update
 
 on:
   schedule:
-    # Run on the 1st of every month at 9 AM UTC
-    # Adjust the cron expression if you want a different schedule
     - cron: '0 9 1 * *'
-  workflow_dispatch:  # Allow manual trigger from GitHub web interface
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
+  workflow_dispatch:
 
 jobs:
   update-grants:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Check out the repository code
-      # Updated to v4 for Node.js 24 compatibility
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
       
-      # Step 2: Set up Python environment
-      # Updated to v5 for Node.js 24 compatibility
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@f677139bbe7f9c59b41e7e0729e916ef287d7785
         with:
           python-version: '3.11'
       
-      # Step 3: Install required Python packages
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
       
-      # Step 4: Fetch latest grants from websites
       - name: Fetch grant data
         run: |
           python scripts/update_grants.py
       
-      # Step 5: Generate website from updated data
       - name: Generate website
         run: |
           python scripts/generate_grant_website.py index.html --data data.json
       
-      # Step 6: Commit and push changes
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
