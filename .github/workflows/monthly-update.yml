@@ -13,12 +13,14 @@ jobs:
     
     steps:
       # Step 1: Check out the repository code
+      # Updated to v4 for Node.js 24 compatibility
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       # Step 2: Set up Python environment
+      # Updated to v5 for Node.js 24 compatibility
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       
@@ -45,5 +47,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add data.json index.html
           git commit -m "Automated update: Fetched latest grants and regenerated website" || echo "No changes to commit"
-          git push
+          git push origin main
           
