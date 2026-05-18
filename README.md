@@ -13,8 +13,16 @@ grant-research-website/
 └── .gitignore           ← Files to ignore
 
 ```
+# Update Grant Information by triggering Git Actions
 
-# Update Grant Information
+1. Go to GitHub repository
+2. Click "Actions" tab
+3. Click "Monthly Update" (or your workflow name)
+4. Click "Run workflow" button
+5. Select "main" branch
+6. Click "Run workflow"
+
+# Alternatively, Update Grant Information
 ### Edit data.json with new grants
 run `python scripts/update_grants.py`
 
