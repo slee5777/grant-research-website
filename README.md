@@ -14,10 +14,10 @@ grant-research-website/
 
 # Update Grant Information
 ### Edit data.json with new grants
-`nano data.json`
+run `python scripts/update_grants.py`
 
 ### Regenerate website
-`python scripts/generate_grant_website.py index.html --data data.json`
+run `python scripts/generate_grant_website.py wa_arts_grants_website.html --data data.json`
 
 ### Push to GitHub
 `git add data.json index.html`
