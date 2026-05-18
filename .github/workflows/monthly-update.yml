@@ -1,32 +1,49 @@
-name: Monthly Grant Research Update
+name: Monthly Grant Update
 
 on:
   schedule:
-    # Run on the 1st of each month at 9:00 AM UTC
+    # Run on the 1st of every month at 9 AM UTC
+    # Adjust the cron expression if you want a different schedule
     - cron: '0 9 1 * *'
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:  # Allow manual trigger from GitHub web interface
 
 jobs:
   update-grants:
     runs-on: ubuntu-latest
     
     steps:
+      # Step 1: Check out the repository code
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+      
+      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       
-      - name: Generate website from data
+      # Step 3: Install required Python packages
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+      
+      # Step 4: Fetch latest grants from websites
+      - name: Fetch grant data
+        run: |
+          python scripts/update_grants.py
+      
+      # Step 5: Generate website from updated data
+      - name: Generate website
         run: |
           python scripts/generate_grant_website.py index.html --data data.json
       
+      # Step 6: Commit and push changes
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data.json index.html
-          git commit -m "Automated update: Grant research refresh" || echo "No changes to commit"
+          git commit -m "Automated update: Fetched latest grants and regenerated website" || echo "No changes to commit"
           git push
+          
