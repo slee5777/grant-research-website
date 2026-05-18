@@ -6,6 +6,9 @@ on:
     # Adjust the cron expression if you want a different schedule
     - cron: '0 9 1 * *'
   workflow_dispatch:  # Allow manual trigger from GitHub web interface
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 
 jobs:
   update-grants:
