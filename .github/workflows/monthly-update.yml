@@ -12,12 +12,10 @@ jobs:
     
     steps:
       # Step 1: Check out the repository code
-      # Using v6 which is Node.js 24 compatible
       - name: Checkout repository
         uses: actions/checkout@v6
       
       # Step 2: Set up Python environment
-      # Using v6 which is Node.js 24 compatible
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -31,13 +29,13 @@ jobs:
       
       # Step 4: Fetch latest grants from websites
       - name: Fetch grant data
-        run: |
-          python scripts/update_grants.py
+        run: python scripts/update_grants.py
+        working-directory: ${{ github.workspace }}
       
       # Step 5: Generate website from updated data
       - name: Generate website
-        run: |
-          python scripts/generate_grant_website.py index.html --data data.json
+        run: python scripts/generate_grant_website.py index.html --data data.json
+        working-directory: ${{ github.workspace }}
       
       # Step 6: Commit and push changes
       - name: Commit and push changes
@@ -47,4 +45,5 @@ jobs:
           git add data.json index.html
           git commit -m "Automated update: Fetched latest grants and regenerated website" || echo "No changes to commit"
           git push origin main
-          
+        working-directory: ${{ github.workspace }}
+        
