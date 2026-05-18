@@ -1,5 +1,4 @@
-# Grant Research Website
-
+# WA Art Grant Research Website
 
 grant-research-website/
 ```
@@ -9,7 +8,10 @@ grant-research-website/
 ├── CHANGELOG.md         ← Track changes
 ├── scripts/
 │   └── generate_grant_website.py  ← Website generator
+├── workflows/
+│   └── monthly-updte.yml  ← generate the latest data.json
 └── .gitignore           ← Files to ignore
+
 ```
 
 # Update Grant Information
@@ -24,7 +26,7 @@ run `python scripts/generate_grant_website.py wa_arts_grants_website.html --data
 `git commit -m "Update: Added new grants for Q2 2026"`
 `git push origin main`
 
-Setup GitHub Actions (Automatic) .github/workflows/monthly-update.yml
+Note: Update data.json will trigger GitHub Actions manually to update the website
 
 # Troubleshooting
 | Problem | Solution |
@@ -34,4 +36,3 @@ Setup GitHub Actions (Automatic) .github/workflows/monthly-update.yml
 | 404 error | Ensure index.html is in root, repository is public |
 | Can't push to GitHub | Run `git pull origin main` first |
 | Broken links | Test all URLs in data.json and update |
-
