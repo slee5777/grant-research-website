@@ -28,6 +28,12 @@ run `python scripts/generate_grant_website.py index.html --data data.json`
 
 Note: Update data.json will trigger GitHub Actions manually to update the website
 
+Currently, this website will be updated automatically on 1st of every month.  If change schedule is required, go to `.github/workflows/monthly-update.yml` to edit `cron expression (e.g., 0 9 1 * * for 1st of month)`.  And then `Commit` changes.
+Common Schedules:
+0 9 1 * * - 1st of month
+0 9 * * 1 - Every Monday
+0 9 15 * * - 15th of month
+
 # Troubleshooting
 | Problem | Solution |
 | --- | --- |
