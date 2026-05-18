@@ -7,7 +7,16 @@ def fetch_grants():
     """Fetch latest grants from APIs or web scraping"""
     # This would connect to grant databases
     # For now, it's a template
-    grants = []
+    grants = [
+        "https://www.cits.wa.gov.au/funding/creative-industries-funding",
+
+        "https://creative.gov.au/investments-opportunities/arts-projects-individuals-and-groups",
+
+        "https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/",
+
+        "https://regionalartswa.org.au/funding/"
+        
+    ]
     
     # Example: Fetch from Creative Australia API
     # Example: Scrape from government websites
