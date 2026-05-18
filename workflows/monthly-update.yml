@@ -1,0 +1,32 @@
+name: Monthly Grant Research Update
+
+on:
+  schedule:
+    # Run on the 1st of each month at 9:00 AM UTC
+    - cron: '0 9 1 * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update-grants:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Generate website from data
+        run: |
+          python scripts/generate_grant_website.py index.html --data data.json
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data.json index.html
+          git commit -m "Automated update: Grant research refresh" || echo "No changes to commit"
+          git push
