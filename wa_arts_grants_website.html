@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WA Arts Grants - Installation, Display & Workshops</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        .content { padding: 30px 20px; }
+        .intro { 
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        .intro h2 { color: #667eea; margin-bottom: 10px; font-size: 18px; }
+        .intro p { line-height: 1.6; color: #555; }
+        .filters { 
+            margin-bottom: 30px; 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters label { 
+            font-weight: bold; 
+            color: #333;
+            margin-right: 10px;
+        }
+        .filters input, .filters select { 
+            padding: 8px 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .filters button { 
+            padding: 8px 16px; 
+            background: #667eea; 
+            color: white; 
+            border: none; 
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .filters button:hover { background: #764ba2; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        thead { background: #667eea; color: white; }
+        th { 
+            padding: 15px; 
+            text-align: left; 
+            font-weight: bold;
+            border-bottom: 2px solid #667eea;
+        }
+        td { 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #eee;
+        }
+        tbody tr:hover { background: #f9f9f9; }
+        tbody tr:nth-child(even) { background: #f5f5f5; }
+        .grant-name { font-weight: bold; color: #667eea; }
+        .amount { color: #27ae60; font-weight: bold; }
+        .deadline { color: #e74c3c; font-weight: bold; }
+        .activity-tag { 
+            display: inline-block;
+            background: #e8f0ff;
+            color: #667eea;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        .link { 
+            color: #667eea; 
+            text-decoration: none; 
+            font-weight: bold;
+        }
+        .link:hover { text-decoration: underline; }
+        .footer { 
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+        }
+        .no-results { 
+            text-align: center; 
+            padding: 40px; 
+            color: #999;
+            font-size: 16px;
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 24px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+            .filters { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 WA Arts Grants Guide</h1>
+            <p>Installation, Display & Workshops Funding Opportunities</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <h2>About These Grants</h2>
+                <p>This comprehensive guide lists all currently available arts grants for Western Australia residents and artists focused on installation, display, and workshop activities. All grants listed below are open for applications as of May 2026. Grants range from $5,000 to $120,000+ and support diverse artistic activities including exhibitions, interactive sessions, and community workshops.</p>
+            </div>
+
+            <div class="filters">
+                <label for="searchInput">Search:</label>
+                <input type="text" id="searchInput" placeholder="Search by grant name or activity..." onkeyup="filterTable()">
+                <label for="amountFilter">Min Amount:</label>
+                <select id="amountFilter" onchange="filterTable()">
+                    <option value="">All</option>
+                    <option value="5000">$5,000+</option>
+                    <option value="10000">$10,000+</option>
+                    <option value="20000">$20,000+</option>
+                    <option value="50000">$50,000+</option>
+                </select>
+                <button onclick="resetFilters()">Reset Filters</button>
+            </div>
+
+            <table id="grantsTable">
+                <thead>
+                    <tr>
+                        <th>Grant Name</th>
+                        <th>Amount</th>
+                        <th>Activities Supported</th>
+                        <th>Application Deadline</th>
+                        <th>Eligibility</th>
+                        <th>Source & Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="grant-name">Arts Short Notice Activity Program (Arts SNAP)</td>
+                        <td class="amount">$5,000 - $10,000</td>
+                        <td><span class="activity-tag">Touring</span><span class="activity-tag">Showcasing</span><span class="activity-tag">Short Notice Activities</span></td>
+                        <td class="deadline">4 June 2026</td>
+                        <td>Individuals, Groups</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Contemporary Music Fund Development Program</td>
+                        <td class="amount">Up to $20,000</td>
+                        <td><span class="activity-tag">Professional Development</span><span class="activity-tag">Touring</span><span class="activity-tag">Recording</span><span class="activity-tag">Promotional</span></td>
+                        <td class="deadline">4 June 2026</td>
+                        <td>Individuals, Bands, Music Professionals</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Creative Learning</td>
+                        <td class="amount">$20,000 - $120,000</td>
+                        <td><span class="activity-tag">Workshops</span><span class="activity-tag">Residencies</span><span class="activity-tag">Partnerships</span><span class="activity-tag">Educational Programs</span></td>
+                        <td class="deadline">21 May 2026</td>
+                        <td>Schools, Creatives, Organisations, Individuals</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Regional Performing Arts</td>
+                        <td class="amount">Varies</td>
+                        <td><span class="activity-tag">Performance Development</span><span class="activity-tag">Touring</span><span class="activity-tag">Regional Venues</span></td>
+                        <td class="deadline">21 May 2026</td>
+                        <td>Regional Artists, Organisations</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Public Regional Galleries Improvement Fund</td>
+                        <td class="amount">Varies</td>
+                        <td><span class="activity-tag">Gallery Improvements</span><span class="activity-tag">Touring Exhibitions</span><span class="activity-tag">Access Programs</span></td>
+                        <td class="deadline">21 May 2026</td>
+                        <td>Regional Galleries, Public Institutions</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Arts Projects for Individuals and Groups</td>
+                        <td class="amount">Up to $80,000</td>
+                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Installations</span><span class="activity-tag">Workshops</span><span class="activity-tag">Arts Projects</span></td>
+                        <td class="deadline">Rolling Rounds</td>
+                        <td>Individuals, Groups, Artists</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/Arts-Projects-for-Individuals-and-Groups" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">City of Fremantle Arts Grant</td>
+                        <td class="amount">Up to $7,500</td>
+                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Workshops</span><span class="activity-tag">Installations</span><span class="activity-tag">Community Engagement</span></td>
+                        <td class="deadline">31 March 2026</td>
+                        <td>Artists, Creatives in Fremantle</td>
+                        <td><a href="https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/" class="link" target="_blank">Fremantle →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Creative Australia - Arts Projects for Individuals and Groups</td>
+                        <td class="amount">$10,000 - $50,000</td>
+                        <td><span class="activity-tag">Professional Development</span><span class="activity-tag">Residencies</span><span class="activity-tag">New Work Creation</span><span class="activity-tag">Mentoring</span></td>
+                        <td class="deadline">1 September 2026</td>
+                        <td>Australian Artists, Individuals, Groups</td>
+                        <td><a href="https://creative.gov.au/investments-opportunities/arts-projects-individuals-and-groups" class="link" target="_blank">Creative Australia →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Regional Arts Fund - Quick Response Grants</td>
+                        <td class="amount">Varies</td>
+                        <td><span class="activity-tag">Quick Response</span><span class="activity-tag">Regional Projects</span><span class="activity-tag">Arts Activities</span></td>
+                        <td class="deadline">Ongoing/Rolling</td>
+                        <td>Regional WA Artists</td>
+                        <td><a href="https://regionalartswa.org.au/funding/" class="link" target="_blank">Regional Arts WA →</a></td>
+                    </tr>
+                    <tr>
+                        <td class="grant-name">Partnership Acceptance Learning Sharing (PALS)</td>
+                        <td class="amount">Varies</td>
+                        <td><span class="activity-tag">Reconciliation Projects</span><span class="activity-tag">Workshops</span><span class="activity-tag">Community Engagement</span></td>
+                        <td class="deadline">11 June 2026</td>
+                        <td>WA Schools, Community Organisations</td>
+                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">CITS WA →</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="noResults" class="no-results" style="display: none;">
+                No grants match your search criteria. Try adjusting your filters.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Last Updated:</strong> May 16, 2026 | <strong>Note:</strong> All grants listed are currently open for applications. Please verify deadlines and eligibility on official websites before applying.</p>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const amountFilter = document.getElementById('amountFilter').value;
+            const table = document.getElementById('grantsTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            let visibleCount = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const grantName = row.cells[0].textContent.toLowerCase();
+                const activities = row.cells[2].textContent.toLowerCase();
+                const amount = row.cells[1].textContent;
+
+                let matchesSearch = grantName.includes(searchInput) || activities.includes(searchInput);
+                let matchesAmount = true;
+
+                if (amountFilter) {
+                    const amountValue = parseInt(amount.replace(/[^0-9]/g, '')) || 0;
+                    matchesAmount = amountValue >= parseInt(amountFilter);
+                }
+
+                if (matchesSearch && matchesAmount) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+
+            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('amountFilter').value = '';
+            const rows = document.getElementById('grantsTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].style.display = '';
+            }
+            document.getElementById('noResults').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

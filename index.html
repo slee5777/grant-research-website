@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adult Dance Studios near Wellard, WA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; }
+        .container { display: flex; height: 100vh; }
+        .map-section { flex: 1; position: relative; }
+        #map { width: 100%; height: 100%; }
+        .sidebar { width: 350px; background: white; overflow-y: auto; box-shadow: -2px 0 5px rgba(0,0,0,0.1); }
+        .sidebar-header { padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .sidebar-header h1 { font-size: 20px; margin-bottom: 5px; }
+        .sidebar-header p { font-size: 12px; opacity: 0.9; }
+        .studio-list { padding: 10px; }
+        .studio-item { padding: 15px; margin: 8px 0; background: #f9f9f9; border-left: 4px solid #667eea; cursor: pointer; transition: all 0.3s; border-radius: 4px; }
+        .studio-item:hover { background: #f0f0f0; transform: translateX(5px); }
+        .studio-item.active { background: #e8e8ff; border-left-color: #764ba2; }
+        .studio-name { font-weight: bold; color: #667eea; margin-bottom: 5px; }
+        .studio-address { font-size: 12px; color: #666; margin-bottom: 5px; }
+        .studio-distance { font-size: 11px; color: #999; margin-bottom: 8px; }
+        .dance-types { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+        .dance-tag { background: #667eea; color: white; padding: 3px 8px; border-radius: 12px; font-size: 11px; }
+        .studio-link { display: inline-block; color: #667eea; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .studio-link:hover { text-decoration: underline; }
+        .filter-section { padding: 15px; border-bottom: 1px solid #eee; }
+        .filter-section h3 { font-size: 14px; margin-bottom: 10px; color: #333; }
+        .filter-checkbox { display: flex; align-items: center; margin: 5px 0; font-size: 12px; }
+        .filter-checkbox input { margin-right: 8px; }
+        .legend { padding: 15px; border-top: 1px solid #eee; font-size: 12px; }
+        .legend-item { display: flex; align-items: center; margin: 5px 0; }
+        .legend-marker { width: 20px; height: 20px; border-radius: 50%; margin-right: 8px; }
+        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { width: 100%; height: 40%; } .map-section { height: 60%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="map-section">
+            <div id="map"></div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>🎭 Dance Studios</h1>
+                <p>Within 45km of Wellard Station</p>
+            </div>
+            <div class="filter-section">
+                <h3>Filter by Dance Type</h3>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-ballet" checked onchange="filterStudios()"> Ballet
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-ballroom" checked onchange="filterStudios()"> Ballroom
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-hiphop" checked onchange="filterStudios()"> Hip Hop
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-contemporary" checked onchange="filterStudios()"> Contemporary
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-latin" checked onchange="filterStudios()"> Latin
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-salsa" checked onchange="filterStudios()"> Salsa
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filter-tango" checked onchange="filterStudios()"> Tango
+                </div>
+            </div>
+            <div class="studio-list" id="studioList"></div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: #667eea;"></div>
+                    <span>Dance Studio</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: #ff6b6b;"></div>
+                    <span>Wellard Station</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const studioData = {
+            "wellard_station": { "lat": -32.27, "lng": 115.85, "name": "Wellard Train Station" },
+            "studios": [
+                { "id": 1, "name": "Momentum Performing Arts Academy", "address": "13 Fifty Road, Baldivis", "lat": -32.3167, "lng": 115.8833, "danceTypes": ["Ballet", "Jazz", "Hip Hop", "Contemporary"], "website": "https://momentumperformingarts.com.au/", "distance_km": 8.5 },
+                { "id": 2, "name": "Bec Leeson Dance Academy", "address": "Tranby Dr, Baldivis", "lat": -32.3200, "lng": 115.8900, "danceTypes": ["Ballet", "Jazz", "Contemporary", "Mature Dancers"], "website": "https://www.beclesondanceacademy.com.au/", "distance_km": 9.0 },
+                { "id": 3, "name": "Royalty Dance Company", "address": "Unit 3, 15 Beale Way, Rockingham", "lat": -32.2833, "lng": 115.7333, "danceTypes": ["Ballet", "Jazz", "Hip Hop", "Contemporary"], "website": "https://royaltydancecompany.com.au/", "distance_km": 12.0 },
+                { "id": 4, "name": "The Star Ballroom", "address": "22 Savery Way, Rockingham", "lat": -32.2900, "lng": 115.7400, "danceTypes": ["Ballroom", "Latin", "Salsa", "Tango", "New Vogue", "Sequence"], "website": "https://www.starballroom.com.au/", "distance_km": 12.5 },
+                { "id": 5, "name": "Beverley Margaret School of Dance", "address": "117 Dixon Rd, East Rockingham", "lat": -32.2950, "lng": 115.7100, "danceTypes": ["Ballet", "Jazz", "Contemporary"], "website": "https://bmsd.com.au/", "distance_km": 14.0 },
+                { "id": 6, "name": "SoaR Dance Studio", "address": "Cockburn Central", "lat": -32.1333, "lng": 115.8333, "danceTypes": ["Adult Ballet", "Beginner Friendly"], "website": "https://soardancestudio.com.au/", "distance_km": 15.5 },
+                { "id": 7, "name": "EK Dance Academy", "address": "Willetton", "lat": -32.0667, "lng": 115.8667, "danceTypes": ["Hip Hop", "Jazz", "Ballet", "Silver Swans (40+)"], "website": "https://ekdanceacademy.com/", "distance_km": 20.0 },
+                { "id": 8, "name": "Mandurah Dance World", "address": "Mandurah", "lat": -32.5333, "lng": 115.7333, "danceTypes": ["Ballroom", "Latin", "Salsa", "Tango"], "website": "http://mandurahdanceworld.com.au/", "distance_km": 32.0 },
+                { "id": 9, "name": "DanceZone WA", "address": "Hamilton Hill / Mandurah", "lat": -32.1667, "lng": 115.7500, "danceTypes": ["Ballroom", "Latin", "Salsa", "Tango"], "website": "https://perthballroomdancing.com.au/", "distance_km": 18.5 },
+                { "id": 10, "name": "Arthur Murray Perth", "address": "Perth CBD", "lat": -31.9505, "lng": 115.8605, "danceTypes": ["Ballroom", "Latin", "Salsa", "Tango"], "website": "https://arthurmurray-perth.com.au/", "distance_km": 35.0 },
+                { "id": 11, "name": "The Dance Workshop", "address": "North Perth", "lat": -31.9333, "lng": 115.8500, "danceTypes": ["Ballet", "Hip Hop", "Contemporary", "Jazz"], "website": "https://danceworkshop.com.au/", "distance_km": 36.0 },
+                { "id": 12, "name": "West Australian Ballet Centre", "address": "Subiaco", "lat": -31.9833, "lng": 115.8167, "danceTypes": ["Adult Ballet", "Pointe", "Pilates"], "website": "https://waballet.com.au/", "distance_km": 38.0 },
+                { "id": 13, "name": "Elite Dance Company", "address": "15 Dickens Place, Armadale", "lat": -32.1167, "lng": 115.9833, "danceTypes": ["Ballet", "Jazz", "Contemporary", "Hip Hop"], "website": "https://www.elitedancecompany.au/", "distance_km": 16.5 },
+                { "id": 14, "name": "The Society Academy", "address": "Cannington", "lat": -32.0167, "lng": 115.9333, "danceTypes": ["Ballet", "Jazz", "Contemporary"], "website": "https://www.thesocietyacademy.com.au/", "distance_km": 19.0 },
+                { "id": 15, "name": "Pazaz Dance Company", "address": "Southern suburbs", "lat": -32.1500, "lng": 115.8500, "danceTypes": ["Ballet", "Acrobatics", "Hip Hop"], "website": "https://pazazdance.co/", "distance_km": 14.5 }
+            ]
+        };
+
+        let map, markers = {}, selectedMarker = null;
+
+        function initMap() {
+            map = L.map('map').setView([-32.27, 115.85], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Add Wellard Station marker
+            const wellard = studioData.wellard_station;
+            L.circleMarker([wellard.lat, wellard.lng], {
+                radius: 8,
+                fillColor: '#ff6b6b',
+                color: '#c92a2a',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup(`<b>${wellard.name}</b>`);
+
+            // Add studio markers
+            studioData.studios.forEach(studio => {
+                const marker = L.circleMarker([studio.lat, studio.lng], {
+                    radius: 7,
+                    fillColor: '#667eea',
+                    color: '#5568d3',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+
+                marker.on('click', () => selectStudio(studio.id));
+                markers[studio.id] = marker;
+            });
+
+            renderStudioList();
+        }
+
+        function renderStudioList() {
+            const list = document.getElementById('studioList');
+            list.innerHTML = '';
+            studioData.studios.forEach(studio => {
+                const item = document.createElement('div');
+                item.className = 'studio-item';
+                item.onclick = () => selectStudio(studio.id);
+                item.innerHTML = `
+                    <div class="studio-name">${studio.name}</div>
+                    <div class="studio-address">📍 ${studio.address}</div>
+                    <div class="studio-distance">📏 ${studio.distance_km} km from Wellard</div>
+                    <div class="dance-types">${studio.danceTypes.map(t => `<span class="dance-tag">${t}</span>`).join('')}</div>
+                    <a href="${studio.website}" target="_blank" class="studio-link">Visit Website →</a>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function selectStudio(id) {
+            // Remove previous selection
+            if (selectedMarker) {
+                selectedMarker.setStyle({ fillColor: '#667eea', weight: 2, radius: 7 });
+            }
+            document.querySelectorAll('.studio-item').forEach(el => el.classList.remove('active'));
+
+            // Add new selection
+            const marker = markers[id];
+            marker.setStyle({ fillColor: '#764ba2', weight: 3, radius: 9 });
+            selectedMarker = marker;
+            map.flyTo([marker.getLatLng().lat, marker.getLatLng().lng], 13);
+
+            // Highlight in list
+            const items = document.querySelectorAll('.studio-item');
+            items[id - 1].classList.add('active');
+            items[id - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function filterStudios() {
+            const filters = {
+                ballet: document.getElementById('filter-ballet').checked,
+                ballroom: document.getElementById('filter-ballroom').checked,
+                hiphop: document.getElementById('filter-hiphop').checked,
+                contemporary: document.getElementById('filter-contemporary').checked,
+                latin: document.getElementById('filter-latin').checked,
+                salsa: document.getElementById('filter-salsa').checked,
+                tango: document.getElementById('filter-tango').checked
+            };
+
+            const list = document.getElementById('studioList');
+            list.innerHTML = '';
+
+            studioData.studios.forEach(studio => {
+                const hasMatchingType = studio.danceTypes.some(type => {
+                    const lowerType = type.toLowerCase();
+                    return (filters.ballet && lowerType.includes('ballet')) ||
+                           (filters.ballroom && lowerType.includes('ballroom')) ||
+                           (filters.hiphop && lowerType.includes('hip hop')) ||
+                           (filters.contemporary && lowerType.includes('contemporary')) ||
+                           (filters.latin && lowerType.includes('latin')) ||
+                           (filters.salsa && lowerType.includes('salsa')) ||
+                           (filters.tango && lowerType.includes('tango'));
+                });
+
+                if (hasMatchingType) {
+                    const item = document.createElement('div');
+                    item.className = 'studio-item';
+                    item.onclick = () => selectStudio(studio.id);
+                    item.innerHTML = `
+                        <div class="studio-name">${studio.name}</div>
+                        <div class="studio-address">📍 ${studio.address}</div>
+                        <div class="studio-distance">📏 ${studio.distance_km} km from Wellard</div>
+                        <div class="dance-types">${studio.danceTypes.map(t => `<span class="dance-tag">${t}</span>`).join('')}</div>
+                        <a href="${studio.website}" target="_blank" class="studio-link">Visit Website →</a>
+                    `;
+                    list.appendChild(item);
+                }
+            });
+        }
+
+        window.addEventListener('load', initMap);
+    </script>
+</body>
+</html>
