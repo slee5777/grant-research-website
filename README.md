@@ -8,8 +8,9 @@ grant-research-website/
 ├── CHANGELOG.md         ← Track changes
 ├── scripts/
 │   └── generate_grant_website.py  ← Website generator
+│   └── update_grants.py  ← Update grant data.json
 ├── workflows/
-│   └── monthly-updte.yml  ← generate the latest data.json
+│   └── monthly-updte.yml  ← display website using the latest data.json
 └── .gitignore           ← Files to ignore
 
 ```
