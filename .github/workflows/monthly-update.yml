@@ -29,7 +29,7 @@ jobs:
       
       # Step 4: Fetch latest grants from websites
       - name: Fetch grant data
-        run: python scripts/update_grants.py
+        run: python scripts/update_grants_filtered.py
         working-directory: ${{ github.workspace }}
       
       # Step 5: Generate website from updated data

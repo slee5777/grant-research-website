@@ -8,7 +8,7 @@ grant-research-website/
 ├── CHANGELOG.md         ← Track changes
 ├── scripts/
 │   └── generate_grant_website.py  ← Website generator
-│   └── update_grants.py  ← Update grant data.json
+│   └── update_grants_filtered.py  ← Update grant data.json
 ├── workflows/
 │   └── monthly-updte.yml  ← display website using the latest data.json
 └── .gitignore           ← Files to ignore
@@ -25,7 +25,7 @@ grant-research-website/
 
 # Alternatively, Update Grant Information
 ### Edit data.json with new grants
-run `python scripts/update_grants.py`
+run `python scripts/update_grants_filtered.py`
 
 ### Regenerate website
 run `python scripts/generate_grant_website.py index.html --data data.json`
