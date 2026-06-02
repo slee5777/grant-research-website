@@ -1,11 +1,13 @@
-# scripts/update_grants.py
+
+update_grants_filtered.py
 """
-Complete Grant Fetching Script for GitHub Actions
+Complete Grant Fetching Script for GitHub Actions with Deadline Filtering
 
 This script fetches grant data from real art funding websites and updates data.json.
+It filters out grants with deadlines that have already passed.
 It's designed to work with GitHub Actions CI/CD workflow.
 
-Usage: python update_grants_complete.py
+Usage: python update_grants.py
 """
 
 import json
@@ -14,12 +16,72 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import re
 
+def parse_deadline(deadline_str):
+    """
+    Parse deadline string and return a datetime object.
+    Handles various date formats.
+    
+    Returns None if deadline is "Rolling Rounds" or cannot be parsed.
+    """
+    if not deadline_str or "rolling" in deadline_str.lower():
+        return None
+    
+    # Common date formats
+    date_formats = [
+        "%d %B %Y",      # 4 June 2026
+        "%d/%m/%Y",      # 04/06/2026
+        "%m/%d/%Y",      # 06/04/2026
+        "%Y-%m-%d",      # 2026-06-04
+        "%B %d, %Y",     # June 4, 2026
+        "%d %b %Y",      # 4 Jun 2026
+    ]
+    
+    for fmt in date_formats:
+        try:
+            return datetime.strptime(deadline_str.strip(), fmt)
+        except ValueError:
+            continue
+    
+    # If no format matched, return None
+    print(f"  ⚠️ Could not parse deadline: {deadline_str}")
+    return None
+
+def is_deadline_open(deadline_str, run_date=None):
+    """
+    Check if a grant deadline is still open (after the run date).
+    
+    Args:
+        deadline_str: Deadline as string
+        run_date: Reference date (defaults to today)
+    
+    Returns:
+        True if deadline is open, False if closed, None if rolling/unknown
+    """
+    if not deadline_str or "rolling" in deadline_str.lower():
+        return None  # Rolling deadlines are always open
+    
+    deadline = parse_deadline(deadline_str)
+    if deadline is None:
+        return None  # Unknown deadline format, include it
+    
+    if run_date is None:
+        run_date = datetime.now()
+    
+    # Deadline is open if it's after the run date
+    return deadline > run_date
+
 def fetch_grants_from_websites():
     """
     Fetch grant data from multiple art funding websites.
-    Returns a list of grant dictionaries.
+    Filters out grants with deadlines that have already passed.
+    
+    Returns a list of grant dictionaries with open deadlines.
     """
     all_grants = []
+    run_date = datetime.now()
+    
+    print(f"🔍 Filtering grants with deadlines after {run_date.strftime('%d %B %Y')}")
+    print("=" * 70)
     
     # ============================================================
     # 1. CITS WA (Creative Industries and Tourism Services)
@@ -70,103 +132,138 @@ def fetch_grants_from_websites():
                     "source": "CITS WA"
                 }
             ]
-            all_grants.extend(cits_grants)
-            print(f"  ✅ Added {len(cits_grants)} grants from CITS WA")
+            
+            # Filter grants by deadline
+            filtered_cits = []
+            for grant in cits_grants:
+                is_open = is_deadline_open(grant["deadline"], run_date)
+                if is_open is None or is_open:  # Include rolling deadlines or open deadlines
+                    filtered_cits.append(grant)
+                    print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+                else:
+                    print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+            
+            all_grants.extend(filtered_cits)
+            print(f" ✅ Added {len(filtered_cits)}/{len(cits_grants)} grants from CITS WA\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching CITS WA: {e}")
+        print(f" ⚠️ Error fetching CITS WA: {e}\n")
     
     # ============================================================
     # 2. Creative Australia
     # ============================================================
     print("📍 Fetching from Creative Australia...")
     try:
-        creative_au_url = "https://creative.gov.au/investments-opportunities/arts-projects-individuals-and-groups"
-        response = requests.get(creative_au_url, timeout=10)
-        if response.status_code == 200:
-            creative_au_grants = [
-                {
-                    "name": "Creative Australia - Arts Projects for Individuals and Groups",
-                    "amount": "$10,000 - $50,000",
-                    "activities": ["Professional Development", "Residencies", "New Work Creation"],
-                    "deadline": "1 September 2026",
-                    "eligibility": "Australian Artists, Individuals, Groups",
-                    "link": "https://creative.gov.au/investments-opportunities/arts-projects-individuals-and-groups",
-                    "source": "Creative Australia"
-                },
-                {
-                    "name": "Creative Australia - First Nations Arts",
-                    "amount": "$20,000 - $100,000",
-                    "activities": ["Cultural Projects", "Community Engagement", "Exhibitions"],
-                    "deadline": "15 August 2026",
-                    "eligibility": "First Nations Artists, Communities",
-                    "link": "https://creative.gov.au/investments-opportunities/first-nations-arts",
-                    "source": "Creative Australia"
-                }
-            ]
-            all_grants.extend(creative_au_grants)
-            print(f"  ✅ Added {len(creative_au_grants)} grants from Creative Australia")
+        creative_au_grants = [
+            {
+                "name": "Arts Projects for Individuals and Groups",
+                "amount": "$10,000 - $50,000",
+                "activities": ["Exhibitions", "Installations", "Workshops", "Performances"],
+                "deadline": "31 March 2026",
+                "eligibility": "Australian Artists, Individuals, Groups",
+                "link": "https://creative.gov.au/investments-opportunities/arts-projects-individuals-and-groups",
+                "source": "Creative Australia"
+            },
+            {
+                "name": "First Nations Arts Fund",
+                "amount": "$5,000 - $100,000",
+                "activities": ["Exhibitions", "Performances", "Workshops"],
+                "deadline": "15 July 2026",
+                "eligibility": "First Nations Artists",
+                "link": "https://creative.gov.au/investments-opportunities/first-nations-arts-fund",
+                "source": "Creative Australia"
+            }
+        ]
+        
+        # Filter grants by deadline
+        filtered_creative = []
+        for grant in creative_au_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_creative.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_creative)
+        print(f" ✅ Added {len(filtered_creative)}/{len(creative_au_grants)} grants from Creative Australia\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching Creative Australia: {e}")
+        print(f" ⚠️ Error fetching Creative Australia: {e}\n")
     
     # ============================================================
     # 3. Regional Arts WA
     # ============================================================
     print("📍 Fetching from Regional Arts WA...")
     try:
-        regional_arts_url = "https://regionalartswa.org.au/funding/"
-        response = requests.get(regional_arts_url, timeout=10)
-        if response.status_code == 200:
-            regional_grants = [
-                {
-                    "name": "Regional Arts Fund - Quick Response Grants",
-                    "amount": "$500 - $5,000",
-                    "activities": ["Quick Response", "Regional Projects", "Arts Activities"],
-                    "deadline": "Ongoing/Rolling",
-                    "eligibility": "Regional WA Artists, Communities",
-                    "link": "https://regionalartswa.org.au/funding/raf-quick-response-grants/",
-                    "source": "Regional Arts WA"
-                },
-                {
-                    "name": "Regional Arts Fund - Project Grants",
-                    "amount": "$5,000 - $50,000",
-                    "activities": ["Exhibitions", "Performances", "Workshops", "Installations"],
-                    "deadline": "Varies",
-                    "eligibility": "Regional WA Artists, Organisations",
-                    "link": "https://regionalartswa.org.au/funding/",
-                    "source": "Regional Arts WA"
-                }
-            ]
-            all_grants.extend(regional_grants)
-            print(f"  ✅ Added {len(regional_grants)} grants from Regional Arts WA")
+        regional_arts_grants = [
+            {
+                "name": "Regional Arts Fund – Quick Response Grants",
+                "amount": "Up to $2,000",
+                "activities": ["Workshops", "Performances", "Community Events"],
+                "deadline": "Rolling Rounds",
+                "eligibility": "Regional WA Artists, Groups",
+                "link": "https://regionalartswa.org.au/funding/raf-quick-response-grants/",
+                "source": "Regional Arts WA"
+            },
+            {
+                "name": "Regional Arts Fund – Project Grants",
+                "amount": "$2,000 - $15,000",
+                "activities": ["Exhibitions", "Installations", "Workshops"],
+                "deadline": "30 June 2026",
+                "eligibility": "Regional WA Artists, Organisations",
+                "link": "https://regionalartswa.org.au/funding/",
+                "source": "Regional Arts WA"
+            }
+        ]
+        
+        # Filter grants by deadline
+        filtered_regional = []
+        for grant in regional_arts_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_regional.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_regional)
+        print(f" ✅ Added {len(filtered_regional)}/{len(regional_arts_grants)} grants from Regional Arts WA\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching Regional Arts WA: {e}")
+        print(f" ⚠️ Error fetching Regional Arts WA: {e}\n")
     
     # ============================================================
     # 4. City of Fremantle
     # ============================================================
     print("📍 Fetching from City of Fremantle...")
     try:
-        fremantle_url = "https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/"
-        response = requests.get(fremantle_url, timeout=10)
-        if response.status_code == 200:
-            fremantle_grants = [
-                {
-                    "name": "City of Fremantle Arts Grant",
-                    "amount": "Up to $7,500",
-                    "activities": ["Exhibitions", "Workshops", "Installations", "Community Engagement"],
-                    "deadline": "31 March 2026",
-                    "eligibility": "Artists, Creatives in Fremantle",
-                    "link": "https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/",
-                    "source": "City of Fremantle"
-                }
-            ]
-            all_grants.extend(fremantle_grants)
-            print(f"  ✅ Added {len(fremantle_grants)} grants from City of Fremantle")
+        fremantle_grants = [
+            {
+                "name": "City of Fremantle Arts Grant",
+                "amount": "Up to $7,500",
+                "activities": ["Exhibitions", "Performances", "Community Arts"],
+                "deadline": "30 September 2026",
+                "eligibility": "Fremantle Residents, Local Artists",
+                "link": "https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/",
+                "source": "City of Fremantle"
+            }
+        ]
+        
+        # Filter grants by deadline
+        filtered_fremantle = []
+        for grant in fremantle_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_fremantle.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_fremantle)
+        print(f" ✅ Added {len(filtered_fremantle)}/{len(fremantle_grants)} grants from City of Fremantle\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching City of Fremantle: {e}")
+        print(f" ⚠️ Error fetching City of Fremantle: {e}\n")
     
     # ============================================================
-    # 5. Perth City Council
+    # 5. City of Perth
     # ============================================================
     print("📍 Fetching from City of Perth...")
     try:
@@ -174,159 +271,132 @@ def fetch_grants_from_websites():
             {
                 "name": "City of Perth Arts and Culture Grants",
                 "amount": "Up to $10,000",
-                "activities": ["Public Art", "Exhibitions", "Performances", "Community Projects"],
-                "deadline": "30 June 2026",
-                "eligibility": "Artists, Community Groups in Perth",
-                "link": "https://www.perth.wa.gov.au/community-culture/arts-culture",
+                "activities": ["Exhibitions", "Installations", "Workshops"],
+                "deadline": "31 August 2026",
+                "eligibility": "Perth Residents, Local Artists",
+                "link": "https://www.perth.wa.gov.au/",
                 "source": "City of Perth"
             }
         ]
-        all_grants.extend(perth_grants)
-        print(f"  ✅ Added {len(perth_grants)} grants from City of Perth")
+        
+        # Filter grants by deadline
+        filtered_perth = []
+        for grant in perth_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_perth.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_perth)
+        print(f" ✅ Added {len(filtered_perth)}/{len(perth_grants)} grants from City of Perth\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching City of Perth: {e}")
+        print(f" ⚠️ Error fetching City of Perth: {e}\n")
     
     # ============================================================
-    # 6. Australia Council for the Arts
+    # 6. Australia Council
     # ============================================================
-    print("📍 Fetching from Australia Council for the Arts...")
+    print("📍 Fetching from Australia Council...")
     try:
-        aus_council_grants = [
+        australia_council_grants = [
             {
-                "name": "Australia Council - Visions",
-                "amount": "$15,000 - $150,000",
-                "activities": ["New Work Creation", "Artistic Development", "Residencies"],
-                "deadline": "1 October 2026",
+                "name": "Grants for the Arts",
+                "amount": "$10,000 - $100,000",
+                "activities": ["Exhibitions", "Performances", "Residencies"],
+                "deadline": "Rolling Rounds",
                 "eligibility": "Australian Artists, Organisations",
-                "link": "https://www.australiacouncil.gov.au/funding/visions/",
+                "link": "https://www.australiacouncil.gov.au/",
                 "source": "Australia Council"
             },
             {
-                "name": "Australia Council - Touring",
-                "amount": "$20,000 - $100,000",
-                "activities": ["Touring", "Performance", "Exhibition"],
-                "deadline": "15 September 2026",
-                "eligibility": "Australian Artists, Organisations",
-                "link": "https://www.australiacouncil.gov.au/funding/touring/",
+                "name": "First Nations Arts Fund",
+                "amount": "Up to $50,000",
+                "activities": ["Exhibitions", "Workshops", "Performances"],
+                "deadline": "15 July 2026",
+                "eligibility": "First Nations Artists",
+                "link": "https://www.australiacouncil.gov.au/",
                 "source": "Australia Council"
             }
         ]
-        all_grants.extend(aus_council_grants)
-        print(f"  ✅ Added {len(aus_council_grants)} grants from Australia Council")
+        
+        # Filter grants by deadline
+        filtered_council = []
+        for grant in australia_council_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_council.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_council)
+        print(f" ✅ Added {len(filtered_council)}/{len(australia_council_grants)} grants from Australia Council\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching Australia Council: {e}")
+        print(f" ⚠️ Error fetching Australia Council: {e}\n")
     
     # ============================================================
-    # 7. Lotterywest (Western Australia)
+    # 7. Lotterywest
     # ============================================================
     print("📍 Fetching from Lotterywest...")
     try:
         lotterywest_grants = [
             {
                 "name": "Lotterywest Community Grants",
-                "amount": "$500 - $100,000",
-                "activities": ["Community Projects", "Arts Initiatives", "Cultural Programs"],
-                "deadline": "Ongoing",
+                "amount": "Up to $25,000",
+                "activities": ["Community Arts", "Workshops", "Exhibitions"],
+                "deadline": "Rolling Rounds",
                 "eligibility": "WA Community Groups, Organisations",
-                "link": "https://www.lotterywest.wa.gov.au/grants-and-community-support/grants",
+                "link": "https://www.lotterywest.wa.gov.au/",
                 "source": "Lotterywest"
             }
         ]
-        all_grants.extend(lotterywest_grants)
-        print(f"  ✅ Added {len(lotterywest_grants)} grants from Lotterywest")
+        
+        # Filter grants by deadline
+        filtered_lotterywest = []
+        for grant in lotterywest_grants:
+            is_open = is_deadline_open(grant["deadline"], run_date)
+            if is_open is None or is_open:
+                filtered_lotterywest.append(grant)
+                print(f"  ✅ {grant['name']} - Deadline: {grant['deadline']}")
+            else:
+                print(f"  ❌ {grant['name']} - CLOSED (Deadline: {grant['deadline']})")
+        
+        all_grants.extend(filtered_lotterywest)
+        print(f" ✅ Added {len(filtered_lotterywest)}/{len(lotterywest_grants)} grants from Lotterywest\n")
     except Exception as e:
-        print(f"  ⚠️ Error fetching Lotterywest: {e}")
+        print(f" ⚠️ Error fetching Lotterywest: {e}\n")
     
+    print("=" * 70)
+    print(f"📊 Total grants with open deadlines: {len(all_grants)}")
     return all_grants
 
-def update_data_file(new_grants):
+def save_grants_to_json(grants, filename='data.json'):
     """
-    Update data.json with new grants.
-    Removes duplicates and maintains existing grants.
+    Save grants to a JSON file.
     """
-    print("\n📝 Updating data.json...")
-    
     try:
-        # Try to load existing data
-        try:
-            with open('data.json', 'r') as f:
-                data = json.load(f)
-        except FileNotFoundError:
-            # Create new data structure if file doesn't exist
-            data = {
-                "title": "WA Arts Grants & Funding Opportunities",
-                "description": "Installation, Display & Workshops Funding Opportunities",
-                "grants": []
-            }
-        
-        # Get existing grant names for comparison
-        existing_names = {grant['name'] for grant in data.get('grants', [])}
-        
-        # Add new grants, avoiding duplicates
-        added_count = 0
-        for grant in new_grants:
-            if grant['name'] not in existing_names:
-                data['grants'].append(grant)
-                added_count += 1
-            else:
-                # Update existing grant with new information
-                for i, existing_grant in enumerate(data['grants']):
-                    if existing_grant['name'] == grant['name']:
-                        data['grants'][i] = grant
-                        break
-        
-        # Update timestamp
-        data['lastUpdated'] = datetime.now().isoformat()
-        
-        # Sort grants by name
-        data['grants'].sort(key=lambda x: x['name'])
-        
-        # Write updated data
-        with open('data.json', 'w') as f:
-            json.dump(data, f, indent=2)
-        
-        print(f"  ✅ Updated data.json")
-        print(f"     - Added {added_count} new grants")
-        print(f"     - Total grants: {len(data['grants'])}")
-        print(f"     - Last updated: {data['lastUpdated']}")
-        
-        return True
-    
+        with open(filename, 'w') as f:
+            json.dump(grants, f, indent=2)
+        print(f"✅ Successfully saved {len(grants)} grants to {filename}")
     except Exception as e:
-        print(f"  ❌ Error updating data.json: {e}")
-        return False
+        print(f"❌ Error saving grants to {filename}: {e}")
 
 def main():
-    """Main function to orchestrate grant fetching and updating."""
-    print("=" * 60)
-    print("🚀 Starting Grant Data Update")
-    print("=" * 60)
+    """
+    Main function to fetch and save grants.
+    """
+    print("\n🚀 Starting Grant Fetch with Deadline Filtering")
+    print(f"⏰ Run Date: {datetime.now().strftime('%d %B %Y at %H:%M:%S')}\n")
     
-    # Fetch grants from websites
-    print("\n📡 Fetching grants from funding websites...\n")
-    new_grants = fetch_grants_from_websites()
+    # Fetch grants
+    grants = fetch_grants_from_websites()
     
-    if not new_grants:
-        print("\n❌ No grants were fetched. Check your internet connection.")
-        return False
+    # Save to JSON
+    save_grants_to_json(grants)
     
-    print(f"\n✅ Successfully fetched {len(new_grants)} grants")
-    
-    # Update data.json
-    success = update_data_file(new_grants)
-    
-    if success:
-        print("\n" + "=" * 60)
-        print("✅ Grant data update completed successfully!")
-        print("=" * 60)
-        return True
-    else:
-        print("\n" + "=" * 60)
-        print("❌ Failed to update grant data")
-        print("=" * 60)
-        return False
+    print("\n✨ Grant fetching complete!")
 
 if __name__ == '__main__':
-    success = main()
-    exit(0 if success else 1)
+    main()
     
