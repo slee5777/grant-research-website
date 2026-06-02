@@ -1,5 +1,3 @@
-
-update_grants_filtered.py
 """
 Complete Grant Fetching Script for GitHub Actions with Deadline Filtering
 
@@ -7,7 +5,7 @@ This script fetches grant data from real art funding websites and updates data.j
 It filters out grants with deadlines that have already passed.
 It's designed to work with GitHub Actions CI/CD workflow.
 
-Usage: python update_grants.py
+Usage: python update_grants_filtered.py
 """
 
 import json
