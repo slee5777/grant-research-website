@@ -1,0 +1,46 @@
+{
+  "theme": {
+    "name": "Default",
+    "description": "Professional purple and blue gradient theme",
+    "colors": {
+      "primary_gradient_start": "#667eea",
+      "primary_gradient_end": "#764ba2",
+      "text_primary": "#333333",
+      "text_secondary": "#555555",
+      "text_muted": "#999999",
+      "text_light": "#666666",
+      "accent_success": "#27ae60",
+      "accent_danger": "#e74c3c",
+      "background_light": "#f0f4ff",
+      "background_neutral": "#f5f5f5",
+      "background_hover": "#f9f9f9",
+      "border_color": "#dddddd",
+      "border_light": "#eeeeee"
+    },
+    "typography": {
+      "font_family": "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      "header_size": "32px",
+      "subheader_size": "18px",
+      "body_size": "14px",
+      "small_size": "12px"
+    },
+    "spacing": {
+      "container_max_width": "1200px",
+      "padding_large": "40px",
+      "padding_medium": "30px",
+      "padding_small": "20px",
+      "gap_large": "20px",
+      "gap_medium": "10px",
+      "gap_small": "4px"
+    },
+    "borders": {
+      "radius_large": "12px",
+      "radius_medium": "8px",
+      "radius_small": "4px"
+    },
+    "shadows": {
+      "shadow_large": "0 10px 40px rgba(0,0,0,0.2)",
+      "shadow_medium": "0 2px 8px rgba(0,0,0,0.1)"
+    }
+  }
+}

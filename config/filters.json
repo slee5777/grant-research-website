@@ -1,0 +1,9 @@
+{
+  "filters": {
+    "amount_thresholds": [5000, 10000, 20000, 50000],
+    "searchable_fields": ["name", "activities", "eligibility"],
+    "sortable_fields": ["deadline", "amount", "name"],
+    "default_sort": "deadline",
+    "default_sort_order": "asc"
+  }
+}

@@ -3,8 +3,12 @@ name: Monthly Grant Update
 on:
   schedule:
     # Run on the 1st of every month at 9 AM UTC
+    # Modify the cron expression to change the schedule:
+    # 0 9 1 * *   - 1st of month
+    # 0 9 * * 1   - Every Monday
+    # 0 9 15 * *  - 15th of month
     - cron: '0 9 1 * *'
-  workflow_dispatch:
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   update-grants:
@@ -13,11 +17,13 @@ jobs:
     steps:
       # Step 1: Check out the repository code
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       # Step 2: Set up Python environment
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       
@@ -27,22 +33,44 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
       
-      # Step 4: Fetch grant data
-      - name: Fetch grant data
+      # Step 4: Fetch and filter grant data
+      - name: Fetch and filter grant data
         run: python scripts/update_grants_filtered.py
         working-directory: ${{ github.workspace }}
-
-      # Step 5: Generate website
+      
+      # Step 5: Generate website from grant data
       - name: Generate website
         run: python scripts/generate_grant_website.py index.html --data data.json
         working-directory: ${{ github.workspace }}
-
-      # Step 6: Commit and push changes
+      
+      # Step 6: Configure Git for commit
+      - name: Configure Git
+        run: |
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "${{ github.actor }}"
+      
+      # Step 7: Commit and push changes
       - name: Commit and push changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           git add data.json index.html
-          git commit -m "Automated update: Fetched latest grants and regenerated website" || echo "No changes to commit"
-          git push origin main
+          git commit -m "chore: Automated grant update - $(date +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
+          git push origin ${{ github.ref_name }}
         working-directory: ${{ github.workspace }}
+      
+      # Step 8: Create GitHub Release (optional)
+      - name: Create Release
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: update-${{ github.run_id }}
+          release_name: Grant Update - ${{ github.run_number }}
+          body: |
+            Automated grant update from GitHub Actions
+            - Fetched latest grant data
+            - Filtered by deadline
+            - Generated website
+            - Updated: ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
