@@ -23,28 +23,31 @@ A professional, automated grant research website generator for discovering and t
 
 ```
 grant-research-website/
-├── config/                          # Configuration files
-│   ├── grants_sources.json         # Grant data organized by funding source
-│   ├── theme.json                  # Color scheme and styling configuration
-│   └── filters.json                # Filter options and searchable fields
-├── scripts/                         # Python scripts
-│   ├── update_grants_filtered.py   # Fetch and filter grants by deadline
-│   ├── generate_grant_website.py   # Generate HTML website from data
-│   └── utils/                      # Utility modules
-│       ├── config_loader.py        # Load configuration files
-│       ├── date_parser.py          # Parse and validate dates
-│       ├── amount_parser.py        # Parse monetary amounts
-│       └── deduplicator.py         # Remove duplicate grants
-├── tests/                           # Unit tests
-│   └── test_utilities.py           # Tests for all utilities
-├── data/                            # Generated data (created by scripts)
-│   └── data.json                   # Current grant data
-├── output/                          # Generated output (created by scripts)
-│   └── index.html                  # Generated website
-├── .github/workflows/               # GitHub Actions automation
-│   └── monthly-update.yml          # Automated monthly update workflow
-├── index.html                       # Website (generated or manual)
-├── data.json                        # Grant data (generated or manual)
+
+config/                    # Configurable data
+├── grants_sources.json   # All grants (no hardcoding)
+├── theme.json            # Colors and styling
+└── filters.json          # Filter options
+
+data/                    # data folder
+├── data.json            # latest data file saved here
+
+scripts/                   # Well-documented Python
+├── update_grants_filtered.py    # Fetch & filter (with docstrings)
+├── generate_grant_website.py    # Generate HTML (with docstrings)
+└── utils/                       # Reusable utilities
+    ├── __init__.py
+    ├── config_loader.py
+    ├── date_parser.py
+    ├── amount_parser.py
+    └── deduplicator.py
+
+tests/                     # Comprehensive test suite
+└── test_utilities.py     # 20+ unit tests
+
+.github/workflows/         # Automated CI/CD
+└── monthly-update.yml    # Configurable schedule
+
 ├── README.md                        # This file
 ├── .gitignore                       # Git ignore rules
 └── LICENSE                          # MIT License

@@ -1,19 +1,5 @@
 # WA Art Grant Research Website
 
-grant-research-website/
-```
-├── index.html           ← Your website (generated or manual)
-├── data.json            ← Grant data (update monthly)
-├── README.md            ← Project description
-├── CHANGELOG.md         ← Track changes
-├── scripts/
-│   └── generate_grant_website.py  ← Website generator
-│   └── update_grants_filtered.py  ← Update grant data.json
-├── workflows/
-│   └── monthly-updte.yml  ← display website using the latest data.json
-└── .gitignore           ← Files to ignore
-
-```
 # Update Grant Information by triggering Git Actions
 
 1. Go to GitHub repository
@@ -31,9 +17,11 @@ run `python scripts/update_grants_filtered.py`
 run `python scripts/generate_grant_website.py index.html --data data.json`
 
 ### Push to GitHub
-`git add data.json index.html`
-`git commit -m "Update: Added new grants for Q2 2026"`
-`git push origin main`
+```python
+git add data.json index.html
+git commit -m "Update: Added new grants for Q2 2026"
+git push origin main
+```
 
 Note: Update data.json will trigger GitHub Actions manually to update the website
 
