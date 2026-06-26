@@ -50,7 +50,10 @@ tests/                     # Comprehensive test suite
 
 ├── README.md                        # This file
 ├── .gitignore                       # Git ignore rules
-└── LICENSE                          # MIT License
+└── docs/
+    ├── LICENSING.md        # This file
+    ├── COMMERCIAL_FAQ.md   # FAQ for commercial users
+    └── CONTRIBUTING.md     # How to contribute
 ```
 
 ---

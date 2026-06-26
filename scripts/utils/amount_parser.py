@@ -1,3 +1,7 @@
+# Copyright (c) 2026 [Assisted Evolution Pty Ltd]
+# Licensed under MIT License (see LICENSE file)
+# or Commercial License (see LICENSE.COMMERCIAL file)
+
 """
 Amount Parser Module
 

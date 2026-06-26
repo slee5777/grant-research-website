@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# Copyright (c) 2026 [Assisted Evolution Pty Ltd]
+# Licensed under MIT License (see LICENSE file)
+# or Commercial License (see LICENSE.COMMERCIAL file)
+
 """
 Grant Data Update Script with Deadline Filtering
 

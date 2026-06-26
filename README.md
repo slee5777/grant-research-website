@@ -41,3 +41,27 @@ Common Schedules:
 | 404 error | Ensure index.html is in root, repository is public |
 | Can't push to GitHub | Run `git pull origin main` first |
 | Broken links | Test all URLs in data.json and update |
+
+
+## Licensing
+
+This project is available under two licenses:
+
+### Community License (MIT)
+For non-commercial use, education, and community projects.
+See [LICENSE](LICENSE) for details.
+
+### Commercial License
+For commercial use, white-label deployments, and proprietary modifications.
+Contact: [sarada@assistedevolution.net]
+See [LICENSE.COMMERCIAL](LICENSE.COMMERCIAL) for details.
+
+```json
+{
+  "license": "MIT OR SEE LICENSE.COMMERCIAL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/grant-research-website"
+  }
+}
+```
