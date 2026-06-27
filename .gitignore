@@ -26,13 +26,7 @@ index.html
 
 
 # Client-specific files (keep these private )
-white-label/clients/*/output/
-white-label/clients/*/data.json
-white-label/clients/*/index.html
-
-# Branding assets (optional - can be kept private)
-white-label/clients/*/branding/logo.png
-white-label/clients/*/branding/favicon.ico
+white-label/
 
 # Logs and caches
 *.log
@@ -44,5 +38,3 @@ __pycache__/
 .env
 .env.local
 venv/
-white-label/clients/*/.env
-white-label/clients/*/.env.local
