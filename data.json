@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Arts Projects for Individuals and Groups",
+    "amount": "Up to $80,000",
+    "activities": [
+      "Exhibitions",
+      "Installations",
+      "Workshops"
+    ],
+    "deadline": "Rolling Rounds",
+    "eligibility": "Individuals, Groups, Artists",
+    "link": "https://www.cits.wa.gov.au/funding/Arts-Projects-for-Individuals-and-Groups",
+    "source": "CITS WA",
+    "source_id": "cits_wa"
+  },
+  {
+    "name": "First Nations Arts Fund",
+    "amount": "$5,000 - $100,000",
+    "activities": [
+      "Exhibitions",
+      "Performances",
+      "Workshops"
+    ],
+    "deadline": "15 July 2026",
+    "eligibility": "First Nations Artists",
+    "link": "https://creative.gov.au/investments-opportunities/first-nations-arts-fund",
+    "source": "Creative Australia",
+    "source_id": "creative_australia"
+  },
+  {
+    "name": "Regional Arts Fund – Quick Response Grants",
+    "amount": "Up to $2,000",
+    "activities": [
+      "Workshops",
+      "Performances",
+      "Community Events"
+    ],
+    "deadline": "Rolling Rounds",
+    "eligibility": "Regional WA Artists, Groups",
+    "link": "https://regionalartswa.org.au/funding/raf-quick-response-grants/",
+    "source": "Regional Arts WA",
+    "source_id": "regional_arts_wa"
+  },
+  {
+    "name": "City of Fremantle Arts Grant",
+    "amount": "Up to $7,500",
+    "activities": [
+      "Exhibitions",
+      "Performances",
+      "Community Arts"
+    ],
+    "deadline": "30 September 2026",
+    "eligibility": "Fremantle Residents, Local Artists",
+    "link": "https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/",
+    "source": "City of Fremantle",
+    "source_id": "city_fremantle"
+  },
+  {
+    "name": "City of Perth Arts and Culture Grants",
+    "amount": "Up to $10,000",
+    "activities": [
+      "Exhibitions",
+      "Installations",
+      "Workshops"
+    ],
+    "deadline": "31 August 2026",
+    "eligibility": "Perth Residents, Local Artists",
+    "link": "https://www.perth.wa.gov.au/business-and-development/grants-and-funding/arts-and-culture-grants",
+    "source": "City of Perth",
+    "source_id": "city_perth"
+  },
+  {
+    "name": "Grants for the Arts",
+    "amount": "$10,000 - $100,000",
+    "activities": [
+      "Exhibitions",
+      "Performances",
+      "Residencies"
+    ],
+    "deadline": "Rolling Rounds",
+    "eligibility": "Australian Artists, Organisations",
+    "link": "https://www.australiacouncil.gov.au/funding/grants-for-the-arts/",
+    "source": "Australia Council",
+    "source_id": "australia_council"
+  },
+  {
+    "name": "Lotterywest Community Grants",
+    "amount": "Up to $25,000",
+    "activities": [
+      "Community Arts",
+      "Workshops",
+      "Exhibitions"
+    ],
+    "deadline": "Rolling Rounds",
+    "eligibility": "WA Community Groups, Organisations",
+    "link": "https://www.lotterywest.wa.gov.au/grants-and-funding/community-grants/",
+    "source": "Lotterywest",
+    "source_id": "lotterywest"
+  }
+]

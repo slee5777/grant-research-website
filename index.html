@@ -5,322 +5,453 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grants & Funding Opportunities</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            background: white; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333333;
+            line-height: 1.6;
         }
-        .header { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 40px 20px;
+            padding: 60px 20px;
             text-align: center;
-        }
-        .header h1 { font-size: 32px; margin-bottom: 10px; }
-        .header p { font-size: 16px; opacity: 0.9; }
-        .content { padding: 30px 20px; }
-        .intro { 
-            background: #f0f4ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #667eea;
-        }
-        .intro h2 { color: #667eea; margin-bottom: 10px; font-size: 18px; }
-        .intro p { line-height: 1.6; color: #555; }
-        .filters { 
-            margin-bottom: 30px; 
-            display: flex; 
-            gap: 10px; 
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .filters label { 
-            font-weight: bold; 
-            color: #333;
-            margin-right: 10px;
-        }
-        .filters input, .filters select { 
-            padding: 8px 12px; 
-            border: 1px solid #ddd; 
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .filters button { 
-            padding: 8px 16px; 
-            background: #667eea; 
-            color: white; 
-            border: none; 
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .filters button:hover { background: #764ba2; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        thead { background: #667eea; color: white; }
-        th { 
-            padding: 15px; 
-            text-align: left; 
-            font-weight: bold;
-            border-bottom: 2px solid #667eea;
+        
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
         }
-        td { 
-            padding: 12px 15px; 
-            border-bottom: 1px solid #eee;
+        
+        header p {
+            font-size: 18px;
+            opacity: 0.95;
         }
-        tbody tr:hover { background: #f9f9f9; }
-        tbody tr:nth-child(even) { background: #f5f5f5; }
-        .grant-name { font-weight: bold; color: #667eea; }
-        .amount { color: #27ae60; font-weight: bold; }
-        .deadline { color: #e74c3c; font-weight: bold; }
-        .activity-tag { 
-            display: inline-block;
-            background: #e8f0ff;
-            color: #667eea;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 4px;
-            margin-bottom: 4px;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
-        .link { 
-            color: #667eea; 
-            text-decoration: none; 
-            font-weight: bold;
+        
+        .filters {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .link:hover { text-decoration: underline; }
-        .footer { 
-            background: #f5f5f5;
-            padding: 20px;
-            text-align: center;
-            color: #666;
+        
+        .filters h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
             font-size: 14px;
-            border-top: 1px solid #ddd;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555555;
         }
-        .no-results { 
-            text-align: center; 
-            padding: 40px; 
-            color: #999;
-            font-size: 16px;
+        
+        .filter-group input,
+        .filter-group select {
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            color: #333333;
         }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f4ff;
+            color: #333333;
+            border: 1px solid #dddddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9f9f9;
+        }
+        
+        .results-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 4px;
+            color: #555555;
+            font-size: 14px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f0f4ff;
+            border-bottom: 2px solid #dddddd;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333333;
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #dddddd;
+            font-size: 14px;
+        }
+        
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .grant-name a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .grant-name a:hover {
+            text-decoration: underline;
+        }
+        
+        .grant-amount {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .grant-deadline {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .grant-source {
+            color: #999999;
+            font-size: 13px;
+        }
+        
+        footer {
+            background: #333333;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: #87ceeb;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999999;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
         @media (max-width: 768px) {
-            .header h1 { font-size: 24px; }
-            table { font-size: 12px; }
-            th, td { padding: 8px; }
-            .filters { flex-direction: column; align-items: flex-start; }
+            header h1 {
+                font-size: 24px;
+            }
+            
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            td, th {
+                padding: 10px;
+            }
+            
+            .grant-activities {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>🎨 Grants & Funding Opportunities</h1>
+        <p>Discover funding opportunities for arts and creative projects</p>
+    </header>
+    
     <div class="container">
-        <div class="header">
-            <h1>💰 Grants & Funding Opportunities</h1>
-            <p>Funding Opportunities & Grant Resources</p>
-        </div>
-
-        <div class="content">
-            <div class="intro">
-                <h2>About These Grants</h2>
-                <p>This comprehensive guide lists all currently available grants and funding opportunities. All grants listed below are open for applications. Use the search and filter tools to find opportunities that match your needs.</p>
-            </div>
-
-            <div class="filters">
-                <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" placeholder="Search by name or activity..." onkeyup="filterTable()">
-                <label for="amountFilter">Min Amount:</label>
-                <select id="amountFilter" onchange="filterTable()">
-                    <option value="">All</option>
+        <div class="filters">
+            <h2>Search & Filter</h2>
+            
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="searchInput">Search Grants</label>
+                    <input type="text" id="searchInput" placeholder="Enter keyword...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="amountFilter">Minimum Amount</label>
+                    <select id="amountFilter">
+<option value="">All Amounts</option>
+                    <option value="2000">$2,000+</option>
                     <option value="5000">$5,000+</option>
+                    <option value="7500">$7,500+</option>
                     <option value="10000">$10,000+</option>
-                    <option value="20000">$20,000+</option>
-                    <option value="50000">$50,000+</option>
-                </select>
-                <button onclick="resetFilters()">Reset Filters</button>
+                    <option value="25000">$25,000+</option>
+                    <option value="80000">$80,000+</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sourceFilter">Funding Source</label>
+                    <select id="sourceFilter">
+                        <option value="">All Sources</option>
+                    </select>
+                </div>
             </div>
-
+            
+            <div class="filter-buttons">
+                <button class="btn-primary" onclick="applyFilters()">🔍 Search & Filter</button>
+                <button class="btn-secondary" onclick="clearFilters()">↺ Clear Filters</button>
+            </div>
+        </div>
+        
+        <div class="results-info">
+            <span id="resultsCount">Showing 7 grants</span>
+        </div>
+        
+        <div class="table-wrapper">
             <table id="grantsTable">
                 <thead>
                     <tr>
                         <th>Grant Name</th>
                         <th>Amount</th>
-                        <th>Activities Supported</th>
-                        <th>Application Deadline</th>
+                        <th>Deadline</th>
                         <th>Eligibility</th>
-                        <th>Source & Link</th>
+                        <th>Activities</th>
+                        <th>Source</th>
                     </tr>
                 </thead>
                 <tbody>
-
-                    <tr>
-                        <td class="grant-name">Arts Short Notice Activity Program (Arts SNAP)</td>
-                        <td class="amount">$5,000 - $10,000</td>
-                        <td><span class="activity-tag">Touring</span><span class="activity-tag">Showcasing</span><span class="activity-tag">Short Notice Activities</span></td>
-                        <td class="deadline">4 June 2026</td>
-                        <td>Individuals, Groups</td>
-                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Contemporary Music Fund Development Program</td>
-                        <td class="amount">Up to $20,000</td>
-                        <td><span class="activity-tag">Professional Development</span><span class="activity-tag">Touring</span><span class="activity-tag">Recording</span></td>
-                        <td class="deadline">4 June 2026</td>
-                        <td>Music Professionals, Bands</td>
-                        <td><a href="https://www.cits.wa.gov.au/funding/creative-industries-funding" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Arts Projects for Individuals and Groups</td>
-                        <td class="amount">Up to $80,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Installations</span><span class="activity-tag">Workshops</span></td>
-                        <td class="deadline">Rolling Rounds</td>
-                        <td>Individuals, Groups, Artists</td>
-                        <td><a href="https://www.cits.wa.gov.au/funding/Arts-Projects-for-Individuals-and-Groups" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">First Nations Arts Fund</td>
-                        <td class="amount">$5,000 - $100,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Performances</span><span class="activity-tag">Workshops</span></td>
-                        <td class="deadline">15 July 2026</td>
-                        <td>First Nations Artists</td>
-                        <td><a href="https://creative.gov.au/investments-opportunities/first-nations-arts-fund" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Regional Arts Fund – Quick Response Grants</td>
-                        <td class="amount">Up to $2,000</td>
-                        <td><span class="activity-tag">Workshops</span><span class="activity-tag">Performances</span><span class="activity-tag">Community Events</span></td>
-                        <td class="deadline">Rolling Rounds</td>
-                        <td>Regional WA Artists, Groups</td>
-                        <td><a href="https://regionalartswa.org.au/funding/raf-quick-response-grants/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Regional Arts Fund – Project Grants</td>
-                        <td class="amount">$2,000 - $15,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Installations</span><span class="activity-tag">Workshops</span></td>
-                        <td class="deadline">30 June 2026</td>
-                        <td>Regional WA Artists, Organisations</td>
-                        <td><a href="https://regionalartswa.org.au/funding/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">City of Fremantle Arts Grant</td>
-                        <td class="amount">Up to $7,500</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Performances</span><span class="activity-tag">Community Arts</span></td>
-                        <td class="deadline">30 September 2026</td>
-                        <td>Fremantle Residents, Local Artists</td>
-                        <td><a href="https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">City of Perth Arts and Culture Grants</td>
-                        <td class="amount">Up to $10,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Installations</span><span class="activity-tag">Workshops</span></td>
-                        <td class="deadline">31 August 2026</td>
-                        <td>Perth Residents, Local Artists</td>
-                        <td><a href="https://www.perth.wa.gov.au/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Grants for the Arts</td>
-                        <td class="amount">$10,000 - $100,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Performances</span><span class="activity-tag">Residencies</span></td>
-                        <td class="deadline">Rolling Rounds</td>
-                        <td>Australian Artists, Organisations</td>
-                        <td><a href="https://www.australiacouncil.gov.au/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">First Nations Arts Fund</td>
-                        <td class="amount">Up to $50,000</td>
-                        <td><span class="activity-tag">Exhibitions</span><span class="activity-tag">Workshops</span><span class="activity-tag">Performances</span></td>
-                        <td class="deadline">15 July 2026</td>
-                        <td>First Nations Artists</td>
-                        <td><a href="https://www.australiacouncil.gov.au/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
-                    <tr>
-                        <td class="grant-name">Lotterywest Community Grants</td>
-                        <td class="amount">Up to $25,000</td>
-                        <td><span class="activity-tag">Community Arts</span><span class="activity-tag">Workshops</span><span class="activity-tag">Exhibitions</span></td>
-                        <td class="deadline">Rolling Rounds</td>
-                        <td>WA Community Groups, Organisations</td>
-                        <td><a href="https://www.lotterywest.wa.gov.au/" class="link" target="_blank">View →</a></td>
-                    </tr>
-
+            <tr class="grant-row" data-amount="80000" data-deadline="Rolling Rounds" data-source="CITS WA">
+                <td class="grant-name"><a href="https://www.cits.wa.gov.au/funding/Arts-Projects-for-Individuals-and-Groups" target="_blank" rel="noopener noreferrer">Arts Projects for Individuals and Groups</a></td>
+                <td class="grant-amount">Up to $80,000</td>
+                <td class="grant-deadline">Rolling Rounds</td>
+                <td class="grant-eligibility">Individuals, Groups, Artists</td>
+                <td class="grant-activities">Exhibitions, Installations, Workshops</td>
+                <td class="grant-source">CITS WA</td>
+            </tr>
+            <tr class="grant-row" data-amount="5000" data-deadline="15 July 2026" data-source="Creative Australia">
+                <td class="grant-name"><a href="https://creative.gov.au/investments-opportunities/first-nations-arts-fund" target="_blank" rel="noopener noreferrer">First Nations Arts Fund</a></td>
+                <td class="grant-amount">$5,000 - $100,000</td>
+                <td class="grant-deadline">15 July 2026</td>
+                <td class="grant-eligibility">First Nations Artists</td>
+                <td class="grant-activities">Exhibitions, Performances, Workshops</td>
+                <td class="grant-source">Creative Australia</td>
+            </tr>
+            <tr class="grant-row" data-amount="2000" data-deadline="Rolling Rounds" data-source="Regional Arts WA">
+                <td class="grant-name"><a href="https://regionalartswa.org.au/funding/raf-quick-response-grants/" target="_blank" rel="noopener noreferrer">Regional Arts Fund – Quick Response Grants</a></td>
+                <td class="grant-amount">Up to $2,000</td>
+                <td class="grant-deadline">Rolling Rounds</td>
+                <td class="grant-eligibility">Regional WA Artists, Groups</td>
+                <td class="grant-activities">Workshops, Performances, Community Events</td>
+                <td class="grant-source">Regional Arts WA</td>
+            </tr>
+            <tr class="grant-row" data-amount="7500" data-deadline="30 September 2026" data-source="City of Fremantle">
+                <td class="grant-name"><a href="https://www.fremantle.wa.gov.au/arts-and-culture/arts-in-fremantle/arts-grant/" target="_blank" rel="noopener noreferrer">City of Fremantle Arts Grant</a></td>
+                <td class="grant-amount">Up to $7,500</td>
+                <td class="grant-deadline">30 September 2026</td>
+                <td class="grant-eligibility">Fremantle Residents, Local Artists</td>
+                <td class="grant-activities">Exhibitions, Performances, Community Arts</td>
+                <td class="grant-source">City of Fremantle</td>
+            </tr>
+            <tr class="grant-row" data-amount="10000" data-deadline="31 August 2026" data-source="City of Perth">
+                <td class="grant-name"><a href="https://www.perth.wa.gov.au/business-and-development/grants-and-funding/arts-and-culture-grants" target="_blank" rel="noopener noreferrer">City of Perth Arts and Culture Grants</a></td>
+                <td class="grant-amount">Up to $10,000</td>
+                <td class="grant-deadline">31 August 2026</td>
+                <td class="grant-eligibility">Perth Residents, Local Artists</td>
+                <td class="grant-activities">Exhibitions, Installations, Workshops</td>
+                <td class="grant-source">City of Perth</td>
+            </tr>
+            <tr class="grant-row" data-amount="10000" data-deadline="Rolling Rounds" data-source="Australia Council">
+                <td class="grant-name"><a href="https://www.australiacouncil.gov.au/funding/grants-for-the-arts/" target="_blank" rel="noopener noreferrer">Grants for the Arts</a></td>
+                <td class="grant-amount">$10,000 - $100,000</td>
+                <td class="grant-deadline">Rolling Rounds</td>
+                <td class="grant-eligibility">Australian Artists, Organisations</td>
+                <td class="grant-activities">Exhibitions, Performances, Residencies</td>
+                <td class="grant-source">Australia Council</td>
+            </tr>
+            <tr class="grant-row" data-amount="25000" data-deadline="Rolling Rounds" data-source="Lotterywest">
+                <td class="grant-name"><a href="https://www.lotterywest.wa.gov.au/grants-and-funding/community-grants/" target="_blank" rel="noopener noreferrer">Lotterywest Community Grants</a></td>
+                <td class="grant-amount">Up to $25,000</td>
+                <td class="grant-deadline">Rolling Rounds</td>
+                <td class="grant-eligibility">WA Community Groups, Organisations</td>
+                <td class="grant-activities">Community Arts, Workshops, Exhibitions</td>
+                <td class="grant-source">Lotterywest</td>
+            </tr>
                 </tbody>
             </table>
-
-            <div id="noResults" class="no-results" style="display: none;">
-                No grants match your search criteria. Try adjusting your filters.
-            </div>
-        </div>
-
-        <div class="footer">
-            <p><strong>Last Updated:</strong> grant-research-website | <strong>Note:</strong> Please verify deadlines and eligibility on official websites before applying.</p>
         </div>
     </div>
-
+    
+    <footer>
+        <p><strong>Last Updated:</strong> 01 July 2026 at 10:25:06 UTC</p>
+        <p><strong>Note:</strong> Please verify deadlines and eligibility on official websites before applying.</p>
+        <p>For more information, visit the <a href="https://github.com/slee5777/grant-research-website">Grant Research Website</a> repository.</p>
+    </footer>
+    
     <script>
-        function filterTable() {
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            const amountFilter = document.getElementById('amountFilter').value;
-            const table = document.getElementById('grantsTable');
-            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            let visibleCount = 0;
-
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const grantName = row.cells[0].textContent.toLowerCase();
-                const activities = row.cells[2].textContent.toLowerCase();
-                const amount = row.cells[1].textContent;
-
-                let matchesSearch = grantName.includes(searchInput) || activities.includes(searchInput);
-                let matchesAmount = true;
-
-                if (amountFilter) {
-                    const amountValue = parseInt(amount.replace(/[^0-9]/g, '')) || 0;
-                    matchesAmount = amountValue >= parseInt(amountFilter);
-                }
-
-                if (matchesSearch && matchesAmount) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-
-            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+        // Populate source filter dynamically
+        function initializeSourceFilter() {
+            const sources = new Set();
+            document.querySelectorAll('.grant-row').forEach(row => {
+                const source = row.dataset.source;
+                if (source) sources.add(source);
+            });
+            
+            const sourceFilter = document.getElementById('sourceFilter');
+            Array.from(sources).sort().forEach(source => {
+                const option = document.createElement('option');
+                option.value = source;
+                option.textContent = source;
+                sourceFilter.appendChild(option);
+            });
         }
-
-        function resetFilters() {
+        
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const minAmount = parseInt(document.getElementById('amountFilter').value) || 0;
+            const source = document.getElementById('sourceFilter').value;
+            
+            let visibleCount = 0;
+            
+            document.querySelectorAll('.grant-row').forEach(row => {
+                const name = row.querySelector('.grant-name').textContent.toLowerCase();
+                const activities = row.querySelector('.grant-activities').textContent.toLowerCase();
+                const eligibility = row.querySelector('.grant-eligibility').textContent.toLowerCase();
+                const rowAmount = parseInt(row.dataset.amount) || 0;
+                const rowSource = row.dataset.source;
+                
+                const matchesSearch = !searchTerm || name.includes(searchTerm) || activities.includes(searchTerm) || eligibility.includes(searchTerm);
+                const matchesAmount = rowAmount >= minAmount;
+                const matchesSource = !source || rowSource === source;
+                
+                const isVisible = matchesSearch && matchesAmount && matchesSource;
+                row.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount++;
+            });
+            
+            updateResultsCount(visibleCount);
+        }
+        
+        // Clear filters
+        function clearFilters() {
             document.getElementById('searchInput').value = '';
             document.getElementById('amountFilter').value = '';
-            const rows = document.getElementById('grantsTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].style.display = '';
-            }
-            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('sourceFilter').value = '';
+            
+            document.querySelectorAll('.grant-row').forEach(row => {
+                row.style.display = '';
+            });
+            
+            updateResultsCount(document.querySelectorAll('.grant-row').length);
         }
+        
+        // Update results count
+        function updateResultsCount(count) {
+            const total = document.querySelectorAll('.grant-row').length;
+            const resultsSpan = document.getElementById('resultsCount');
+            resultsSpan.textContent = count === total ? 
+                `Showing ${count} grants` : 
+                `Showing ${count} of ${total} grants`;
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSourceFilter();
+        });
+        
+        // Allow Enter key to trigger search
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
     </script>
 </body>
 </html>
